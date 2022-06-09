@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Juego de parejas</title>
+    <style>
+        .cartas {
+            width: 73px;
+            height: 103px;
+            border: 1px solid black;
+            margin: 10px;
+            background-image: url(reversa.jpg);
+            background-size: cover;
+        }
+
+        #cartas {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            justify-content: center;
+            align-items: center;
+            grid-gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>El juego de las parejas</h1>
+    <section id="botones">
+        <div id="Comenzar">Comienza Partida</div>
+        <div id="Puntos">Puntos: 0</div>
+    </section>
+    <section id="cartas">
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+        <div class="cartas"></div>
+    </section>
+
+    <script>
+        // Cargo las imagenes en un array
+        let cartas = new Array(
+            "imagenes_cartas/exodia.png",
+            "imagenes_cartas/brazo_izq.png",
+            "imagenes_cartas/brazo_der.jpg",
+            "imagenes_cartas/pierna_izq.jpg",
+            "imagenes_cartas/pierna_der.jpg",
+            "imagenes_cartas/exodia_circulo.jpg",
+            "imagenes_cartas/exodia_encarnado.jpg",
+            "imagenes_cartas/exodia_fusion.jpg",
+            "imagenes_cartas/exodia_chibi.jpg",
+            "imagenes_cartas/exodia_evolution.png"
+        );
+        let cartasCopia = new Array();
+        let puntos = 0;
+        let botonComenzar = document.getElementById("Comenzar");
+        botonComenzar.addEventListener("click", comenzar);
+        let arrayCorrecto = [];
+        let cartasIndividuales = document.querySelectorAll(".cartas");
+        let cartasVolteadas;
+
+        // Funcion para comprobar arrayCorrecto
+        function comprobarArray() {
+            if (arrayCorrecto.length == 2) {
+                if (arrayCorrecto[0] == arrayCorrecto[1]) {
+                    puntos += 10;
+                    cartasVolteadas += 2;
+                    comprobarFin();
+                } else {
+                    puntos -= 1;
+                    for (let i = 0; i < cartasIndividuales.length; i++) {
+                        // Comprobar si es igual a alguna de las cartas
+                        console.log("url(\"" + arrayCorrecto[0] + ")\"")
+                        if (cartasIndividuales[i].style.backgroundImage == ("url(\"" + arrayCorrecto[0] + "\")") || cartasIndividuales[i].style.backgroundImage == ("url(\"" + arrayCorrecto[1] + "\")")) {
+                            // esperar un segundo y volver a poner la imagen
+                            setTimeout(function() {
+                                cartasIndividuales[i].style.backgroundImage = "url(reversa.jpg)";
+                            }, 1000);
+
+                        }
+
+
+                    }
+                }
+                actualizarPuntos();
+                arrayCorrecto = [];
+                
+            }
+        }
+        // Función para actualizar los puntos
+        function actualizarPuntos() {
+            document.getElementById("Puntos").innerHTML = "<span>Puntos: " + puntos + "</span>";
+        }
+        // Función para comprobar fin de juego
+        function comprobarFin() {
+            if (cartasVolteadas == cartasIndividuales.length) {
+                alert("Ganaste! Tuviste " + puntos + " puntos");
+                comenzar();
+            }
+        }
+
+        // Función para comenzar la partida
+        function comenzar() {
+            puntos = 0;
+            actualizarPuntos();
+            cartasVolteadas = 0;
+            cartasCopia = cartas.slice().concat(cartas.slice());
+
+            // Aleatorizar el array
+            cartasCopia.sort(function () {
+                return 0.5 - Math.random();
+            });
+
+            // Asignar funciones a los botones
+
+            cartasIndividuales = Array.from(cartasIndividuales);
+
+            // Reiniciar imagenes
+            cartasIndividuales.forEach(function (carta) {
+                carta.style.backgroundImage = "url(reversa.jpg)";
+            });
+
+            // Asignar imagenes
+
+            for (let i = 0; i < cartasIndividuales.length; i++) {
+                cartasIndividuales[i].addEventListener("click", function () {
+                    cartasIndividuales[i].style.backgroundImage = "url(" + cartasCopia[i] + ")";
+                    arrayCorrecto.push(cartasCopia[i]);
+                    comprobarArray();
+                });
+            }
+        }
+
+
+
+        // Comenzamos partida
+        comenzar();
+
+
+    </script>
+</body>
+
+</html>
